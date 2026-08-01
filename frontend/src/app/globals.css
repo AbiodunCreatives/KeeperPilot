@@ -1,26 +1,189 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f7f5;
+  --surface: #ffffff;
+  --surface-muted: #f1f0ec;
+  --surface-strong: #eceae6;
+  --border: #eceae6;
+  --border-strong: #dedbd5;
+  --foreground: #111111;
+  --muted-foreground: #6b6b6b;
+  --subtle-foreground: #98968f;
+  --accent: #ff7a1a;
+  --accent-hover: #ed6a0e;
+  --accent-foreground: #ffffff;
+  --accent-soft: #fff1e6;
+  --accent-ring: rgba(255, 122, 26, 0.35);
+  --success: #17874d;
+  --success-soft: #e7f6ee;
+  --warning: #b45b0a;
+  --warning-soft: #fdf1e3;
+  --danger: #c0392b;
+  --danger-soft: #fcecea;
+  --info: #2f6bd6;
+  --info-soft: #e8effc;
+  --ring: var(--accent-ring);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --sidebar-width: 232px;
+  --context-width: 320px;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-strong: var(--surface-strong);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle-foreground: var(--subtle-foreground);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-ring: var(--ring);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --radius-lg: var(--radius);
+  --radius-md: 14px;
+  --radius-sm: var(--radius-sm);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.dark {
+  --background: #121210;
+  --surface: #1a1a17;
+  --surface-muted: #21211d;
+  --surface-strong: #2a2a25;
+  --border: #26261f;
+  --border-strong: #34342c;
+  --foreground: #f2f1ed;
+  --muted-foreground: #a3a199;
+  --subtle-foreground: #6f6d65;
+  --accent: #ff7a1a;
+  --accent-hover: #ff8c3a;
+  --accent-foreground: #1a1006;
+  --accent-soft: #33230f;
+  --success: #3dbf78;
+  --success-soft: #12291b;
+  --warning: #e79a4a;
+  --warning-soft: #2a2014;
+  --danger: #e06659;
+  --danger-soft: #2c1713;
+  --info: #6c9df0;
+  --info-soft: #15213a;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    height: 100%;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    height: 100%;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--foreground);
+  }
+
+  /* Scrollbar — quiet, matches the surface language */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Soft hero orb — the personality layer of the empty state */
+  .orb {
+    background:
+      radial-gradient(
+        circle at 30% 25%,
+        rgba(255, 122, 26, 0.35) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        circle at 70% 75%,
+        rgba(90, 120, 255, 0.28) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        circle at 55% 50%,
+        rgba(255, 180, 90, 0.25) 0%,
+        transparent 60%
+      );
+    filter: blur(1px);
+  }
+
+  .glass {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Entrance animation for chat content — respects reduced motion */
+  .animate-rise {
+    animation: rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .animate-pop {
+    animation: pop 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-rise,
+    .animate-pop {
+      animation: none;
+    }
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 }

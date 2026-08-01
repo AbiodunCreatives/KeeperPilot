@@ -59,6 +59,10 @@ class Settings(BaseSettings):
     # Frontend
     next_public_api_url: str = "http://localhost:8000"
 
+    # CORS origins allowed to call this API (frontend dev/prod origins).
+    # JSON list string, e.g. '["http://localhost:3000"]'.
+    cors_origins: list[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
+
 
 @lru_cache
 def get_settings() -> Settings:
