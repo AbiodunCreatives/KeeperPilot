@@ -15,6 +15,7 @@ from database.models.enums import ExecutionStatus
 
 if TYPE_CHECKING:
     from database.models.user import User
+    from database.models.wallet import Wallet
 
 
 class Execution(UUIDPrimaryKeyMixin, Base):
@@ -29,12 +30,17 @@ class Execution(UUIDPrimaryKeyMixin, Base):
     user_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False
     )
+    wallet_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("wallets.id", ondelete="SET NULL"), index=True, nullable=True
+    )
     action: Mapped[str] = mapped_column(String(64), nullable=False)
     status: Mapped[ExecutionStatus] = mapped_column(
         Enum(ExecutionStatus, native_enum=False, length=16),
         default=ExecutionStatus.PENDING,
         nullable=False,
     )
+    source_protocol: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    target_protocol: Mapped[str | None] = mapped_column(String(64), nullable=True)
     transaction_hash: Mapped[str | None] = mapped_column(String(66), nullable=True)
     gas_used: Mapped[Decimal | None] = mapped_column(Numeric(14, 2), nullable=True)
     amount: Mapped[Decimal | None] = mapped_column(Numeric(38, 18), nullable=True)
@@ -46,6 +52,7 @@ class Execution(UUIDPrimaryKeyMixin, Base):
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     user: Mapped[User] = relationship(back_populates="executions")
+    wallet: Mapped[Wallet | None] = relationship()
 
     def __repr__(self) -> str:
         return f"<Execution id={self.id} action={self.action} status={self.status}>"
