@@ -20,6 +20,10 @@ dependencies = [
     "httpx>=0.28",
     "python-dotenv>=1.0",
     "mcp>=1.2",
+    "eth-account>=0.13",
+    "eth-utils>=4.1",
+    "pyjwt>=2.10",
+    "email-validator>=2.2",
 ]
 
 [project.optional-dependencies]

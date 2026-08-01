@@ -31,10 +31,6 @@ class Wallet(UUIDPrimaryKeyMixin, Base):
     user_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False
     )
-
-    user_id: Mapped[WalletStatus | object] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False
-    )
     address: Mapped[str] = mapped_column(String(42), nullable=False)
     chain: Mapped[str] = mapped_column(String(32), nullable=False)
     status: Mapped[WalletStatus] = mapped_column(

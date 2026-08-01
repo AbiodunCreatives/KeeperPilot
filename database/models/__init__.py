@@ -8,6 +8,7 @@ from database.models.position import Position
 from database.models.preferences import UserPreferences
 from database.models.user import User
 from database.models.wallet import Wallet
+from database.models.wallet_challenge import WalletChallenge
 
 __all__ = [
     "AuditLog",
@@ -20,6 +21,7 @@ __all__ = [
     "UserPreferences",
     "UUIDPrimaryKeyMixin",
     "Wallet",
+    "WalletChallenge",
     "WalletStatus",
     "utcnow",
 ]

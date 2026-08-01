@@ -36,3 +36,25 @@ async def db_session(db_engine):
     factory = async_sessionmaker(db_engine, expire_on_commit=False)
     async with factory() as session:
         yield session
+
+
+@pytest.fixture
+async def api_client(db_engine):
+    """ASGI test client with the app's DB dependency swapped for the test DB."""
+    import httpx
+    from httpx import ASGITransport
+
+    from backend.app.main import app
+    from database.session import get_db
+
+    factory = async_sessionmaker(db_engine, expire_on_commit=False)
+
+    async def _override_db():
+        async with factory() as session:
+            yield session
+
+    app.dependency_overrides[get_db] = _override_db
+    transport = ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        yield client
+    app.dependency_overrides.clear()

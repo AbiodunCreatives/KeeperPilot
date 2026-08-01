@@ -10,6 +10,7 @@ from database.models import (
     User,
     UserPreferences,
     Wallet,
+    WalletChallenge,
     WalletStatus,
 )
 from database.session import (
@@ -30,6 +31,7 @@ __all__ = [
     "User",
     "UserPreferences",
     "Wallet",
+    "WalletChallenge",
     "WalletStatus",
     "async_session_factory",
     "build_engine",

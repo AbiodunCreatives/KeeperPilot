@@ -20,6 +20,11 @@ venv/
 .coverage
 htmlcov/
 
+# ---------- Local databases ----------
+*.db
+*.sqlite
+*.sqlite3
+
 # ---------- Node / Next.js ----------
 node_modules/
 .next/

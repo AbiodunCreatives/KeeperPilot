@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from database.models.execution import Execution
     from database.models.preferences import UserPreferences
     from database.models.wallet import Wallet
+    from database.models.wallet_challenge import WalletChallenge
 
 
 class User(UUIDPrimaryKeyMixin, Base):
@@ -41,6 +42,10 @@ class User(UUIDPrimaryKeyMixin, Base):
         cascade="all, delete-orphan",
     )
     audit_logs: Mapped[list[AuditLog]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+    challenges: Mapped[list[WalletChallenge]] = relationship(
         back_populates="user",
         cascade="all, delete-orphan",
     )
