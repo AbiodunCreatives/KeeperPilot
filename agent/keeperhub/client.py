@@ -1,7 +1,9 @@
-"""KeeperHub client: mock market + executor for development/tests, real MCP stub.
+"""KeeperHub client contract: mock executor for development/tests, real MCP.
 
 KeeperHub is the execution layer. This package reads market/yield data and
-submits executions. The mock is deterministic and fully offline.
+submits executions. ``MockKeeperHubClient`` is deterministic and fully offline;
+``KeeperHubMCPClient`` (see ``agent.keeperhub.mcp_client``) talks to the real
+MCP server and needs a ``kh_`` API key.
 """
 
 from __future__ import annotations
@@ -94,40 +96,16 @@ class MockKeeperHubClient:
         return ExecutionReceipt(tx_hash=tx_hash, status="completed")
 
 
-class KeeperHubMCPClient:
-    """Real KeeperHub client.
-
-    Requires credentials (``KEEPERHUB_MOCK=false`` + ``KEEPERHUB_API_KEY``).
-    Full MCP wiring lands in Task 7 together with execution.
-    """
-
-    def __init__(self, api_key: str, mcp_url: str) -> None:
-        if not api_key:
-            raise RuntimeError(
-                "KEEPERHUB_MOCK is false but KEEPERHUB_API_KEY is not set"
-            )
-        self.api_key = api_key
-        self.mcp_url = mcp_url
-
-    async def get_opportunities(self, asset: str, chain: str) -> list[YieldOpportunity]:
-        raise NotImplementedError(
-            "Live KeeperHub market data requires the Task 7 MCP wiring"
-        )
-
-    async def submit(self, action: ExecutionAction) -> ExecutionReceipt:
-        raise NotImplementedError(
-            "Live KeeperHub execution requires the Task 7 MCP wiring"
-        )
-
-    async def get_receipt(self, tx_hash: str) -> ExecutionReceipt:
-        raise NotImplementedError(
-            "Live KeeperHub execution requires the Task 7 MCP wiring"
-        )
-
-
 def get_keeperhub_client(settings: Settings | None = None) -> KeeperHubClient:
-    """Return the mock or real client based on settings."""
+    """Return the mock or real client based on settings.
+
+    Real mode requires ``KEEPERHUB_MOCK=false`` and a ``KEEPERHUB_API_KEY``.
+    """
     settings = settings or get_settings()
     if settings.keeperhub_mock:
         return MockKeeperHubClient()
+    # Imported lazily to avoid a circular import (the real client imports the
+    # dataclasses defined in this module).
+    from agent.keeperhub.mcp_client import KeeperHubMCPClient
+
     return KeeperHubMCPClient(settings.keeperhub_api_key, settings.keeperhub_mcp_url)

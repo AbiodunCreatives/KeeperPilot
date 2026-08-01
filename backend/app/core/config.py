@@ -31,6 +31,17 @@ class Settings(BaseSettings):
     keeperhub_api_base: str = "https://app.keeperhub.com/api"
     keeperhub_chain_id: str = "11155111"  # Ethereum Sepolia
 
+    # KeeperHub MCP client behavior (real mode)
+    keeperhub_request_timeout: float = 30.0
+    keeperhub_max_retries: int = 3
+    keeperhub_retry_backoff: float = 1.0
+    keeperhub_poll_interval: float = 2.0
+    keeperhub_poll_max_attempts: int = 5
+
+    # Market data (real mode: DefiLlama yields API)
+    keeperhub_market_max_pools: int = 20
+    keeperhub_default_gas_usd: float = 2.0
+
     # Telegram notifications
     telegram_bot_token: str = ""
     telegram_chat_id: str = ""

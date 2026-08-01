@@ -48,7 +48,7 @@ exclude = ["database/migrations/versions"]
 select = ["E", "F", "W", "I", "B", "UP", "S"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101"]
+"tests/*" = ["S101", "S105", "S106", "S107"]
 "backend/app/core/*" = ["S101"]
 
 [tool.pytest.ini_options]
